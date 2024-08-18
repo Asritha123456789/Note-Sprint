@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dynamic Calendar with Events</title>
+    <link rel="stylesheet" href="calender.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+    <div class="calendar-container">
+        <div class="calendar">
+            <div class="calendar-header">
+                <button id="prev-month">&lt;</button>
+                <h2 id="month-year"></h2>
+                <button id="next-month">&gt;</button>
+                <button id="calendar-icon" title="Pick Date">&#x1F4C5;</button>
+            </div>
+            <div class="calendar-body">
+                <div class="days-of-week">
+                    <div>Sun</div>
+                    <div>Mon</div>
+                    <div>Tue</div>
+                    <div>Wed</div>
+                    <div>Thu</div>
+                    <div>Fri</div>
+                    <div>Sat</div>
+                </div>
+                <div id="calendar-days" class="calendar-days"></div>
+            </div>
+        </div>
+
+        <div id="event-sidebar" class="sidebar">
+            <h2>Manage Events</h2>
+            <div id="event-list"></div>
+            <form id="event-form">
+                <input type="hidden" id="event-date">
+                <label for="event-title">Event Title</label>
+                <input type="text" id="event-title" required>
+                <button type="submit">Add Event</button>
+            </form>
+            <button id="save-events">Save Events</button>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="calender.js"></script>
+</body>
+</html>
+
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calendar</title>
+    <link rel="stylesheet" href="calender.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+</head>
+<body>
+    <div id="calendar-container">
+        <div id="calendar-header">
+            <button id="prev-month">Previous</button>
+            <h2 id="month-year"></h2>
+            <button id="next-month">Next</button>
+        </div>
+        <div id="calendar-days"></div>
+    </div>
+    <div id="event-sidebar" class="sidebar">
+        <form id="event-form">
+            <label for="event-title">Event Title:</label>
+            <input type="text" id="event-title" name="title" required>
+            <label for="event-date">Event Date:</label>
+            <input type="text" id="event-date" name="date" required readonly>
+            <button type="submit">Add Event</button>
+        </form>
+        <div id="event-list"></div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="calender.js"></script>
+</body>
+</html> -->
+
