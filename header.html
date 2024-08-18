@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Header</title>
+    <style>
+        body {
+            margin: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #82369f;
+            font-family: Arial, sans-serif;
+        }
+        button {
+            background-color: #82369f;
+            border: none;
+            font-size: 18px;
+            margin-top: 20px;
+            padding: 7px;
+            width: 100px;
+            border-radius: 5px;
+        }
+        nav {
+            display: flex;
+            gap: 15px;
+        }
+        a {
+            color: white;
+            text-decoration: none;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #82369f;
+        }
+
+        .logout-button {
+            display: inline-block;
+            background-color: #82369f;
+            color: white;
+            padding: 10px 20px;
+            text-align: center;
+            text-decoration: none;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .logout-button:hover {
+            background-color: #82369f;
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <button><a href="frames.html?v=1" target="_top">Home</a></button>
+        <button><a href="draw.html" target="content-frame">Draw</a></button>
+        <button><a href="todo/r2.html" target="content-frame">To-Do</a></button>
+        <button><a href="calender/calender.html" target="content-frame">Calendars</a></button>
+        <button><a href="notes/notes.html" target="content-frame">Notes</a></button>
+        <button><a href="php/logout.php" target="_top">Logout</a></button>  
+    </nav>
+</body>
+</html>

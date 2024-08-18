@@ -1,0 +1,39 @@
+/* Reset default margins and paddings */
+body, html {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+}
+
+.header-frame {
+    height: 60px; /* Adjust height as needed */
+    border: none;
+    width: 100%;
+}
+
+.body-frame {
+    flex: 1;
+    border: none;
+    width: 100%;
+}
+
+/* Ensure responsiveness */
+@media (max-width: 768px) {
+    .header-frame {
+        height: 50px;
+    }
+}
+
+@media (max-width: 480px) {
+    .header-frame {
+        height: 40px;
+    }
+}

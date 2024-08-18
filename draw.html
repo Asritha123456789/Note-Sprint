@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Drawing Page with Controls</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+    <style>
+        /* body {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f0f0f0;
+        } */
+        
+        button:hover {
+            background-color: #82369f;
+        }
+        #drawingCanvas {
+            border: 1px solid #000;
+            width: 1450px;
+            height: 550px;
+        }
+
+        #controls {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        button {
+            margin: 5px;
+            padding: 10px 15px;
+            background-color: #a27abf;
+            border: none;
+            color: #fff;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="controls">
+        <button id="paintBtn"><i class="fas fa-paint-brush"></i> Paint</button>
+        <button id="eraseBtn"><i class="fas fa-eraser"></i> Erase</button>
+        <button id="undoBtn"><i class="fas fa-undo"></i> Undo</button>
+        <select id="colorPicker">
+            <option value="#000000">Black</option>
+            <option value="#ff0000">Red</option>
+            <option value="#00ff00">Green</option>
+            <option value="#0000ff">Blue</option>
+            <option value="#ffff00">Yellow</option>
+            <!-- Add more colors as needed -->
+        </select>
+        <div>
+            <label for="sizeSlider">Tool Size:</label>
+            <input type="range" id="sizeSlider" min="1" max="50" value="5">
+            <span id="sizeLabel">Size: 5</span>
+        </div>
+        <div>
+            <label for="eraserSizeSlider">Eraser Size:</label>
+            <input type="range" id="eraserSizeSlider" min="1" max="50" value="5">
+            <span id="eraserSizeLabel">Eraser Size: 5</span>
+        </div>
+        <select id="eraserShape">
+            <option value="round">Round Eraser</option>
+            <option value="square">Square Eraser</option>
+        </select>
+    </div>
+
+    <canvas id="drawingCanvas" width="800" height="600"></canvas>
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const canvas = document.getElementById("drawingCanvas");
+            const context = canvas.getContext("2d");
+            let isDrawing = false;
+            let isErasing = false;
+            let paths = [];
+            let currentPath = [];
+
+            function startDrawing(e) {
+                isDrawing = true;
+                currentPath = [];
+                draw(e);
+            }
+
+            function stopDrawing() {
+                isDrawing = false;
+                if (currentPath.length > 0) {
+                    paths.push(currentPath);
+                }
+                context.beginPath();
+            }
+
+            function draw(e) {
+                if (!isDrawing) return;
+
+                const size = document.getElementById("sizeSlider").value;
+                context.lineWidth = size;
+
+                context.lineCap = "round";
+                const color = isErasing ? "#f0f0f0" : document.getElementById("colorPicker").value;
+                context.strokeStyle = color;
+
+                context.lineTo(e.clientX - canvas.offsetLeft, e.clientY - canvas.offsetTop);
+                context.stroke();
+
+                currentPath.push({
+                    x: e.clientX - canvas.offsetLeft,
+                    y: e.clientY - canvas.offsetTop,
+                    size: size,
+                    color: context.strokeStyle,
+                    isEraser: isErasing
+                });
+
+                context.beginPath();
+                context.moveTo(e.clientX - canvas.offsetLeft, e.clientY - canvas.offsetTop);
+            }
+
+            function erase(e) {
+                if (!isErasing) return;
+
+                const size = document.getElementById("eraserSizeSlider").value;
+                context.clearRect(
+                    e.clientX - canvas.offsetLeft - size / 2,
+                    e.clientY - canvas.offsetTop - size / 2,
+                    size,
+                    size
+                );
+            }
+
+            function toggleEraseMode() {
+                const eraseBtn = document.getElementById("eraseBtn");
+                eraseBtn.classList.toggle("active");
+                isErasing = eraseBtn.classList.contains("active");
+            }
+
+            function updateSizeLabel() {
+                const sizeLabel = document.getElementById("sizeLabel");
+                const sizeValue = document.getElementById("sizeSlider").value;
+                sizeLabel.textContent = "Size: " + sizeValue;
+            }
+
+            function updateEraserSizeLabel() {
+                const eraserSizeLabel = document.getElementById("eraserSizeLabel");
+                const eraserSizeValue = document.getElementById("eraserSizeSlider").value;
+                eraserSizeLabel.textContent = "Eraser Size: " + eraserSizeValue;
+            }
+
+            function undo() {
+                if (paths.length > 0) {
+                    paths.pop();
+                    redraw();
+                }
+            }
+
+            function redraw() {
+                clearCanvas();
+                paths.forEach(path => {
+                    context.beginPath();
+                    path.forEach(point => {
+                        context.lineWidth = point.size;
+                        context.lineCap = point.isEraser ? "round" : "butt";
+                        context.strokeStyle = point.color;
+                        context.lineTo(point.x, point.y);
+                        context.stroke();
+                    });
+                    context.beginPath();
+                });
+            }
+
+            function clearCanvas() {
+                context.clearRect(0, 0, canvas.width, canvas.height);
+            }
+
+            // Event listeners
+            canvas.addEventListener("mousedown", startDrawing);
+            canvas.addEventListener("mouseup", stopDrawing);
+            canvas.addEventListener("mousemove", draw);
+            canvas.addEventListener("mousemove", erase);
+
+            document.getElementById("paintBtn").addEventListener("click", function () {
+                isErasing = false;
+                document.getElementById("eraseBtn").classList.remove("active");
+            });
+
+            document.getElementById("eraseBtn").addEventListener("click", function () {
+                toggleEraseMode();
+            });
+
+            document.getElementById("colorPicker").addEventListener("input", function () {
+                if (!isErasing) {
+                    context.strokeStyle = this.value;
+                }
+            });
+
+            document.getElementById("sizeSlider").addEventListener("input", function () {
+                updateSizeLabel();
+            });
+
+            document.getElementById("eraserSizeSlider").addEventListener("input", function () {
+                updateEraserSizeLabel();
+            });
+
+            document.getElementById("eraserShape").addEventListener("change", function () {
+                const selectedShape = this.value;
+                context.lineCap = selectedShape === "round" ? "round" : "butt";
+            });
+
+            document.getElementById("undoBtn").addEventListener("click", function () {
+                undo();
+            });
+
+            // Prevent scrolling when drawing
+            document.addEventListener("touchstart", function (e) {
+                if (e.target === canvas) {
+                    e.preventDefault();
+                }
+            }, { passive: false });
+
+            document.addEventListener("touchmove", function (e) {
+                if (e.target === canvas) {
+                    e.preventDefault();
+                }
+            }, { passive: false });
+        });
+    </script>
+</body>
+</html>
